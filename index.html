@@ -786,7 +786,7 @@
         document.getElementById('state-message').style.display = 'none';
         
         try {
-            const response = await fetch(`https://omnistream-api-am0a.onrender.com/get-links?url=${encodeURIComponent(movieUrl)}`);
+            const response = await fetch(`https://omnistream-api-ec29.onrender.com/get-links?url=${encodeURIComponent(movieUrl)}`);
             if (!response.ok) throw new Error('Server responded with ' + response.status);
             const links = await response.json();
 
