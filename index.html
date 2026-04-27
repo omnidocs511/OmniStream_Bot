@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniStream - Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #080b12;
+            --surface: #0f1420;
+            --surface-2: #151c2e;
+            --surface-3: #1c2540;
+            --accent: #4f8eff;
+            --accent-glow: rgba(79,142,255,0.18);
+            --accent-2: #a78bfa;
+            --gold: #f59e0b;
+            --success: #10b981;
+            --text: #e8eaf6;
+            --text-muted: #7b8ab8;
+            --text-dim: #3d4a6b;
+            --border: rgba(79,142,255,0.12);
+            --border-hover: rgba(79,142,255,0.35);
+            --radius: 14px;
+            --radius-lg: 20px;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 70% 40% at 20% -10%, rgba(79,142,255,0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 35% at 90% 110%, rgba(167,139,250,0.1) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Grid bg pattern */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(79,142,255,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(79,142,255,0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* NAV */
+        nav {
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            background: rgba(8,11,18,0.7);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 40%, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-logo span { color: var(--accent); -webkit-text-fill-color: var(--accent); }
+
+        .nav-badge {
+            font-size: 11px;
+            font-weight: 500;
+            background: var(--accent-glow);
+            color: var(--accent);
+            border: 1px solid rgba(79,142,255,0.3);
+            padding: 4px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* AD BANNER TOP */
+        .ad-banner-top {
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .ad-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        /* Replace this with your actual Adsterra banner code */
+        .adsterra-banner-top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+            width: 100%;
+            max-width: 728px;
+        }
+
+        /* Placeholder visual for ad area */
+        .ad-placeholder {
+            width: 100%;
+            max-width: 728px;
+            height: 90px;
+            border: 1px dashed rgba(245,158,11,0.25);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: rgba(245,158,11,0.4);
+            font-size: 12px;
+            background: rgba(245,158,11,0.03);
+        }
+
+        /* MAIN CONTENT */
+        main {
+            flex: 1;
+            padding: 32px 16px 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 28px;
+        }
+
+        /* HERO CARD */
+        .hero-card {
+            width: 100%;
+            max-width: 560px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
+        }
+
+        .hero-header {
+            padding: 28px 28px 20px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(79,142,255,0.05) 0%, transparent 100%);
+        }
+
+        .status-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .status-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 8px rgba(16,185,129,0.6);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(16,185,129,0.6); }
+            50% { opacity: 0.6; box-shadow: 0 0 16px rgba(16,185,129,0.3); }
+        }
+
+        .status-text-small {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--success);
+            letter-spacing: 0.3px;
+        }
+
+        .movie-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: clamp(20px, 5vw, 28px);
+            line-height: 1.2;
+            color: #fff;
+            letter-spacing: -0.5px;
+            word-break: break-word;
+        }
+
+        .movie-title .highlight {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .meta-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .meta-tag {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            background: var(--surface-2);
+        }
+
+        .hero-body {
+            padding: 24px 28px;
+        }
+
+        .info-text {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+
+        /* FETCH BUTTON */
+        .fetch-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent) 0%, #3b6fd4 100%);
+            color: #fff;
+            border: none;
+            padding: 14px 28px;
+            border-radius: var(--radius);
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 4px 24px rgba(79,142,255,0.3);
+        }
+
+        .fetch-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .fetch-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 8px 32px rgba(79,142,255,0.45); }
+        .fetch-btn:hover::before { opacity: 1; }
+        .fetch-btn:active:not(:disabled) { transform: translateY(0); }
+        .fetch-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .btn-inner { display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+        .btn-icon {
+            width: 18px; height: 18px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* LOADER */
+        .loader {
+            width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* RESULTS AREA */
+        .results-area {
+            display: none;
+            margin-top: 20px;
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .quality-item {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: border-color 0.2s, background 0.2s;
+            animation: fadeIn 0.3s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .quality-item:hover {
+            border-color: var(--border-hover);
+            background: var(--surface-3);
+        }
+
+        .quality-item.episode {
+            border-color: rgba(16,185,129,0.2);
+            background: rgba(16,185,129,0.04);
+        }
+
+        .quality-item.episode:hover {
+            border-color: rgba(16,185,129,0.4);
+        }
+
+        .quality-info { flex: 1; min-width: 0; }
+
+        .quality-name {
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .quality-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .dl-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, var(--accent), #3b6fd4);
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            font-size: 12px;
+            letter-spacing: 0.3px;
+            transition: transform 0.15s, box-shadow 0.15s;
+            flex-shrink: 0;
+            box-shadow: 0 2px 12px rgba(79,142,255,0.25);
+        }
+
+        .dl-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 18px rgba(79,142,255,0.4); }
+        .dl-btn.ep-dl { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 2px 12px rgba(16,185,129,0.2); }
+        .dl-btn.ep-dl:hover { box-shadow: 0 4px 18px rgba(16,185,129,0.4); }
+
+        /* ERROR / EMPTY */
+        .state-message {
+            text-align: center;
+            padding: 24px;
+            display: none;
+        }
+
+        .state-icon {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 20px;
+        }
+
+        .state-icon.error { background: rgba(239,68,68,0.1); }
+        .state-icon.empty { background: rgba(123,138,184,0.1); }
+
+        /* NO-URL WARNING BANNER */
+        .no-url-warning {
+            display: none;
+            background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(239,68,68,0.06));
+            border: 1px solid rgba(245,158,11,0.25);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            margin-bottom: 4px;
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .no-url-warning-inner {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .warning-icon-wrap {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            background: rgba(245,158,11,0.12);
+            border: 1px solid rgba(245,158,11,0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .warning-body { flex: 1; }
+
+        .warning-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            color: #f59e0b;
+            margin-bottom: 4px;
+            letter-spacing: 0.2px;
+        }
+
+        .warning-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.55;
+        }
+
+        .state-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+
+        .state-sub { font-size: 13px; color: var(--text-muted); }
+
+        /* STATS ROW */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            max-width: 560px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px;
+            text-align: center;
+        }
+
+        .stat-val {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* SIDE AD - 160x600 skyscraper */
+        .ad-side {
+            position: fixed;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            z-index: 10;
+        }
+
+        /* Replace with Adsterra skyscraper code */
+        .adsterra-side { width: 160px; min-height: 600px; }
+
+        /* BOTTOM AD STRIP */
+        .ad-bottom-strip {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        /* Replace with Adsterra 728x90 or 320x50 */
+        .adsterra-banner-bottom {
+            width: 100%;
+            max-width: 728px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 16px 24px;
+            font-size: 12px;
+            color: var(--text-dim);
+            border-top: 1px solid var(--border);
+        }
+
+        footer a { color: var(--accent); text-decoration: none; }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 3px; }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .ad-side { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            nav { padding: 0 16px; }
+            .hero-header, .hero-body { padding: 20px 18px; }
+            .quality-item { flex-wrap: wrap; gap: 10px; }
+            .dl-btn { width: 100%; justify-content: center; }
+            .stats-row { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 380px) {
+            .stats-row { grid-template-columns: 1fr; }
+        }
+
+        /* COUNT ANIMATION */
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .count-animate { animation: countUp 0.4s ease forwards; }
+
+    </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-logo">Omni<span>Stream</span></div>
+        <div class="nav-badge">⬡ Portal</div>
+    </nav>
+
+    <!-- TOP AD BANNER (Adsterra 728x90 Leaderboard) -->
+    <div class="ad-banner-top">
+        <div class="adsterra-banner-top" id="adsterra-top">
+            <script>
+            atOptions = {
+                'key' : 'f9fffbacd3515e6ea16e2b0017eb52d3',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728,
+                'params' : {}
+            };
+            </script>
+            <script src="https://www.highperformanceformat.com/f9fffbacd3515e6ea16e2b0017eb52d3/invoke.js"></script>
+        </div>
+    </div>
+
+    <main>
+        <!-- STATS ROW -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-val" id="stat-formats">—</div>
+                <div class="stat-label">Formats</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="stat-speed">HD+</div>
+                <div class="stat-label">Quality</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="stat-free">Free</div>
+                <div class="stat-label">Access</div>
+            </div>
+        </div>
+
+        <!-- HERO CARD -->
+        <div class="hero-card">
+
+            <div class="hero-header">
+                <div class="status-row">
+                    <div class="status-dot"></div>
+                    <span class="status-text-small">Server Online</span>
+                </div>
+                <h1 class="movie-title" id="movie-name">Loading...</h1>
+                <div class="meta-row" id="meta-row">
+                    <span class="meta-tag">🎬 Movie</span>
+                    <span class="meta-tag">Multi-Quality</span>
+                </div>
+            </div>
+
+            <div class="hero-body">
+                <p class="info-text" id="status-text">
+                    Fetch all available download qualities for this title instantly. No sign-up required.
+                </p>
+
+                <!-- NO-URL WARNING -->
+                <div class="no-url-warning" id="no-url-warning">
+                    <div class="no-url-warning-inner">
+                        <div class="warning-icon-wrap">⚠️</div>
+                        <div class="warning-body">
+                            <div class="warning-title">No Movie URL Provided</div>
+                            <div class="warning-desc">
+                                This portal requires a <code style="font-size:11px;color:#f59e0b;">?url=</code> parameter in the page link to fetch download links. Please open this page from a valid OmniStream source.
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FETCH BUTTON -->
+                <button class="fetch-btn" id="start-btn" onclick="fetchLinks()">
+                    <div class="btn-inner">
+                        <div class="loader" id="btn-loader"></div>
+                        <div class="btn-icon" id="btn-icon">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M8 1v9M4.5 7l3.5 3.5L11.5 7M2 12.5h12" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span id="btn-text">Fetch Download Links</span>
+                    </div>
+                </button>
+
+                <!-- ERROR / EMPTY STATE -->
+                <div class="state-message" id="state-message">
+                    <div class="state-icon error" id="state-icon">⚠️</div>
+                    <div class="state-title" id="state-title">Something went wrong</div>
+                    <div class="state-sub" id="state-sub">Make sure app.py is running on port 5000.</div>
+                </div>
+
+                <!-- RESULTS -->
+                <div class="results-area" id="quality-area">
+                    <div class="results-label">Available Qualities</div>
+                    <div id="links-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin: 20px 0; width: 100%; max-width: 560px;">
+            <span class="ad-label" style="display:block; text-align:center; margin-bottom:5px;">Recommended For You</span>
+            
+            <script async="async" data-cfasync="false" src="//pl29269111.profitablecpmratenetwork.com/34c5d54cc074a468d20cf42badbf3e27/invoke.js"></script>
+            <div id="container-34c5d54cc074a468d20cf42badbf3e27"></div>
+        </div>
+    </main>
+
+    <!-- SIDE AD (160x600 Skyscraper — hidden on mobile) -->
+    <div class="ad-side">
+        <div class="adsterra-side" id="adsterra-side">
+            <script>
+            atOptions = {
+                'key' : '4cf7e6223fc0a408e30886901f4dbdca',
+                'format' : 'iframe',
+                'height' : 600,
+                'width' : 160,
+                'params' : {}
+            };
+            </script>
+            <script src="https://www.highperformanceformat.com/4cf7e6223fc0a408e30886901f4dbdca/invoke.js"></script>
+        </div>
+    </div>
+
+    <!-- BOTTOM STICKY AD (728x90 or 320x50 for mobile) -->
+    <div class="ad-bottom-strip">
+        <div class="adsterra-banner-bottom" id="adsterra-bottom">
+            <script>
+            atOptions = {
+                'key' : 'f9fffbacd3515e6ea16e2b0017eb52d3',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728,
+                'params' : {}
+            };
+            </script>
+            <script src="https://www.highperformanceformat.com/f9fffbacd3515e6ea16e2b0017eb52d3/invoke.js"></script>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 <a href="#">OmniStream</a> &mdash; Powered by the web, made for OmniFlow.
+    </footer>
+
+</div>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const movieTitle = params.get('title') || "OmniStream Portal";
+    const movieUrl = params.get('url') || null;
+
+    // Set movie title
+    const titleEl = document.getElementById('movie-name');
+    const decoded = decodeURIComponent(movieTitle);
+    titleEl.textContent = decoded;
+
+    // Hide button & show warning if URL is missing
+    if (!movieUrl || movieUrl.trim() === '') {
+        document.getElementById('start-btn').style.display = 'none';
+        document.getElementById('status-text').textContent = 'This page cannot load without a valid source URL.';
+        document.getElementById('no-url-warning').style.display = 'block';
+        const dot = document.querySelector('.status-dot');
+        if (dot) { dot.style.background = '#f59e0b'; dot.style.boxShadow = '0 0 8px rgba(245,158,11,0.5)'; }
+        const statusSmall = document.querySelector('.status-text-small');
+        if (statusSmall) { statusSmall.textContent = 'No Source URL'; statusSmall.style.color = '#f59e0b'; }
+    }
+
+    // Detect if series
+    const isSeries = /season|episode|s\d+e\d+/i.test(decoded);
+    if (isSeries) {
+        const metaRow = document.getElementById('meta-row');
+        metaRow.innerHTML = `
+            <span class="meta-tag">📺 Series</span>
+            <span class="meta-tag">All Episodes</span>`;
+    }
+
+    async function fetchLinks() {
+        const adLink = "https://www.profitablecpmratenetwork.com/j6frdupk?key=8138e3d0bc6f49a8b7c6bfd2f23a750d";
+        window.open(adLink, '_blank');
+
+        if (!movieUrl) {
+            showState('error', '⛔', 'Missing URL', 'No movie URL was provided in the page parameters.');
+            return;
+        }
+
+        const btn = document.getElementById('start-btn');
+        const statusText = document.getElementById('status-text');
+
+        // Loading state
+        btn.disabled = true;
+        document.getElementById('btn-loader').style.display = 'block';
+        document.getElementById('btn-icon').style.display = 'none';
+        document.getElementById('btn-text').textContent = 'Fetching Links…';
+        statusText.textContent = 'Connecting to server…';
+        document.getElementById('state-message').style.display = 'none';
+        
+        try {
+            const response = await fetch(`https://omnistream-api-am0a.onrender.com/get-links?url=${encodeURIComponent(movieUrl)}`);
+            if (!response.ok) throw new Error('Server responded with ' + response.status);
+            const links = await response.json();
+
+            if (!links || links.length === 0) {
+                showState('empty', '🔍', 'No Links Found', 'The server returned no download links for this title.');
+                resetBtn();
+                return;
+            }
+
+            // Update stats
+            document.getElementById('stat-formats').textContent = links.length;
+            document.getElementById('stat-formats').classList.add('count-animate');
+
+            // Render links
+            const container = document.getElementById('links-container');
+            container.innerHTML = '';
+            links.forEach((item, i) => {
+                console.log(item);
+                const isEp = item.quality.toLowerCase().includes('episode');
+                const div = document.createElement('div');
+                div.className = `quality-item${isEp ? ' episode' : ''}`;
+                div.style.animationDelay = `${i * 60}ms`;
+                div.innerHTML = `
+                    <div class="quality-info">
+                        <div class="quality-name">${item.quality}</div>
+                        <div class="quality-sub">Download Link</div>
+                    </div>
+                    <a href="${item.url}" target="_blank" rel="noopener" class="dl-btn${isEp ? ' ep-dl' : ''}">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <path d="M6 1v7M3 6l3 3 3-3M1 10h10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Download
+                    </a>`;
+                container.appendChild(div);
+            });
+
+            // Show results
+            btn.style.display = 'none';
+            statusText.textContent = `${links.length} quality option${links.length > 1 ? 's' : ''} found. Pick yours:`;
+            document.getElementById('quality-area').style.display = 'block';
+
+        } catch (e) {
+            showState('error', '⚠️', 'Connection Failed', 'Make sure app.py is running on port 5000.');
+            resetBtn();
+        }
+    }
+
+    function showState(type, icon, title, sub) {
+        const el = document.getElementById('state-message');
+        document.getElementById('state-icon').textContent = icon;
+        document.getElementById('state-icon').className = `state-icon ${type}`;
+        document.getElementById('state-title').textContent = title;
+        document.getElementById('state-sub').textContent = sub;
+        el.style.display = 'block';
+    }
+
+    function resetBtn() {
+        const btn = document.getElementById('start-btn');
+        btn.disabled = false;
+        btn.style.display = '';
+        document.getElementById('btn-loader').style.display = 'none';
+        document.getElementById('btn-icon').style.display = 'flex';
+        document.getElementById('btn-text').textContent = 'Retry';
+    }
+</script>
+<script src="https://pl29269112.profitablecpmratenetwork.com/28/3b/cc/283bcc5e83f7bf9f5942f970657d6673.js"></script>
+<script src="https://pl29269702.profitablecpmratenetwork.com/90/e8/d4/90e8d4648ad948a601035130e3fa6de4.js"></script>
+</body>
+</html>
