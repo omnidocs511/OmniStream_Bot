@@ -817,7 +817,7 @@
                             <div class="warning-body">
                                 <div class="warning-title">No Movie URL Provided</div>
                                 <div class="warning-desc">
-                                    This portal requires a <code style="font-size:11px;color:#f59e0b;">?url=</code>
+                                    This portal requires a <code style="font-size:11px;color:#f59e0b;">?title=</code>
                                     parameter in the page link to fetch download links. Please open this page from a
                                     valid OmniStream source.
                                     <br>
@@ -844,7 +844,7 @@
                     <div class="state-message" id="state-message">
                         <div class="state-icon error" id="state-icon">⚠️</div>
                         <div class="state-title" id="state-title">Something went wrong</div>
-                        <div class="state-sub" id="state-sub">Make sure app.py is running on port 5000.</div>
+                        <div class="state-sub" id="state-sub">Server is not running.</div>
                     </div>
 
                     <!-- RESULTS -->
@@ -856,9 +856,6 @@
             </div>
 
             <div style="margin: 20px 0; width: 100%; max-width: 560px;">
-                <span class="ad-label" style="display:block; text-align:center; margin-bottom:5px;">Recommended For
-                    You</span>
-
                 <script async="async" data-cfasync="false"
                     src="//pl29269111.profitablecpmratenetwork.com/34c5d54cc074a468d20cf42badbf3e27/invoke.js"></script>
                 <div id="container-34c5d54cc074a468d20cf42badbf3e27"></div>
@@ -933,8 +930,8 @@
         }
 
         async function fetchLinks() {
-            const adLink = "https://www.profitablecpmratenetwork.com/j6frdupk?key=8138e3d0bc6f49a8b7c6bfd2f23a750d";
-            window.open(adLink, '_blank');
+            // const adLink = "https://www.profitablecpmratenetwork.com/j6frdupk?key=8138e3d0bc6f49a8b7c6bfd2f23a750d";
+            // window.open(adLink, '_blank');
 
             if (!movieUrl) {
                 showState('error', '⛔', 'Missing URL', 'No movie URL was provided in the page parameters.');
@@ -1017,7 +1014,7 @@
                 document.getElementById('quality-area').style.display = 'block';
 
             } catch (e) {
-                showState('error', '⚠️', 'Connection Failed', 'Make sure app.py is running on port 5000.');
+                showState('error', '⚠️', 'Connection Failed', 'Server is running.');
                 resetBtn();
             }
         }
